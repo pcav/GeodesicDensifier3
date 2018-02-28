@@ -32,7 +32,7 @@ except ImportError:
     # this will get the path for this file and add it to the system PATH
     # so the geographiclib folder can be found
     print(dirname((getsourcefile(lambda:0))))
-    site.addsitedir(dirname(abspath(getsourcefile(lambda:0))))
+    site.addsitedir(dirname(abspath(getsourcefile(lambda: 0))))
     from geographiclib.geodesic import Geodesic
 import math
 from qgis.core import QgsCoordinateReferenceSystem, QgsCoordinateTransform, QgsWkbTypes, QgsFeature, QgsPointXY, QgsGeometry, QgsField, QgsProject
@@ -490,13 +490,10 @@ class GeodesicDensifier:
                 for feature in iterator:
                     try:
                         if feature.geometry().wkbType() ==  QgsWkbTypes.Polygon:
-                            print('polygon')
                             polygon = feature.geometry().asPolygon()
                             polyCount = len(polygon)
                             pointList = []
                             for points in polygon:
-                                print('points')
-                                print(points)
                                 pointCount = len(points)
                                 startPt = QgsPointXY(points[0][0], points[0][1])
                                 if self.inLayer.crs() != wgs84crs:
@@ -521,8 +518,6 @@ class GeodesicDensifier:
                                         polyPointList[x] = transfromwgs84.transform(pt)
 
                             outPolygon = QgsFeature()
-                            print('polyPoinList')
-                            print(polyPointList)
                             outPolygon.setGeometry(QgsGeometry.fromPolygonXY([polyPointList]))
                             outPolygon.setAttributes(feature.attributes())
                             pr.addFeatures([outPolygon])
@@ -543,16 +538,15 @@ class GeodesicDensifier:
                                     polyPointList = [startPt]
                                     for i in range(1, pointCount):
                                         endPt = QgsPointXY(points[i][0], points[i][1])
+                                        print('endPt:', endPt)
                                         if self.inLayer.crs() != wgs84crs:  # Convert to 4326
                                             endPt = transtowgs84.transform(endPt)
-                                        lineObject = self.geod.InverseLine(startPt.y(), startPt.x(), endPt.y(),
-                                                                           endPt.x())
+                                        lineObject = self.geod.InverseLine(startPt.y(), startPt.x(), endPt.y(), endPt.x())
                                         n = int(math.ceil(lineObject.s13 / self.spacing))
                                         seglen = lineObject.s13 / n
                                         for i in range(1, n):
                                             s = seglen * i
-                                            g = lineObject.Position(s,
-                                                                    Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL)
+                                            g = lineObject.Position(s, Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL)
                                             polyPointList.append(QgsPointXY(g['lon2'], g['lat2']))
                                         polyPointList.append(endPt)
                                         startPt = endPt
@@ -561,12 +555,15 @@ class GeodesicDensifier:
                                         for x, pt in enumerate(polyPointList):
                                             polyPointList[x] = transfromwgs84.transform(pt)
                                 multiPointList.append(polyPointList)
-
+                            print('multiPointList:', multiPointList)
                             outMultiPolygon = QgsFeature()
-                            outMultiPolygon.setGeometry(QgsGeometry.fromMultiPolygonXY(multiPointList))
+                            print('setGeometry')
+                            outMultiPolygon.setGeometry(QgsGeometry.fromMultiPolygonXY([multiPointList]))
+                            print('setAttributes')
                             outMultiPolygon.setAttributes(feature.attributes())
+                            print('addFeatures')
                             pr.addFeatures([outMultiPolygon])
-
+                            print('finished')
                         else:
                             badGeom += 1
                     except:
