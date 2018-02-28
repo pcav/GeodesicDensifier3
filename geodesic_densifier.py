@@ -36,17 +36,15 @@ except ImportError:
     from geographiclib.geodesic import Geodesic
 import math
 from qgis.core import QgsCoordinateReferenceSystem, QgsCoordinateTransform, QgsWkbTypes, QgsFeature, QgsPointXY, QgsGeometry, QgsField, QgsProject
-from qgis.gui import QgsMessageBar
 from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QVariant
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
 
 # Initialize Qt resources from file resources.py
-from resources import *
+from .resources import *
 # Import the code for the dialog
 from geodesic_densifier_dialog import GeodesicDensifierDialog
 import os.path
-
 
 class GeodesicDensifier:
     """QGIS Plugin Implementation."""
@@ -63,44 +61,15 @@ class GeodesicDensifier:
         self.iface = iface
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
-        # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
-        locale_path = os.path.join(
-            self.plugin_dir,
-            'i18n',
-            'GeodesicDensifier_{}.qm'.format(locale))
-
-        if os.path.exists(locale_path):
-            self.translator = QTranslator()
-            self.translator.load(locale_path)
-
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
 
         # Create the dialog (after translation) and keep reference
         self.dlg = GeodesicDensifierDialog()
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Geodesic Densifier')
+        self.menu = u'&Geodesic Densifier'
         self.toolbar = self.iface.addToolBar(u'GeodesicDensifier')
         self.toolbar.setObjectName(u'GeodesicDensifier')
-
-    # noinspection PyMethodMayBeStatic
-    def tr(self, message):
-        """Get the translation for a string using Qt translation API.
-
-        We implement this ourselves since we do not inherit QObject.
-
-        :param message: String for translation.
-        :type message: str, QString
-
-        :returns: Translated version of message.
-        :rtype: QString
-        """
-        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('GeodesicDensifier', message)
-
 
     def add_action(
         self,
@@ -178,10 +147,10 @@ class GeodesicDensifier:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/GeodesicDensifier/icon.png'
+        icon_path = ':/plugins/GeodesicDensifier3/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'Geodesic Densifier'),
+            text=u'Geodesic Densifier',
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -189,9 +158,7 @@ class GeodesicDensifier:
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
-            self.iface.removePluginMenu(
-                self.tr(u'&Geodesic Densifier'),
-                action)
+            self.iface.removePluginMenu(u'&Geodesic Densifier', action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
         del self.toolbar
