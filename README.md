@@ -1,3 +1,7 @@
+#Please fix the links
+sorry for abusing this, but issue tracker does not seem active.
+Thanks.
+
 # GeodesicDensifier3
 QGIS3 plugin to densify geometries along geodesic lines
 
