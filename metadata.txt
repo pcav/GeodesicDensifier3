@@ -1,0 +1,39 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Geodesic Densifier
+qgisMinimumVersion=3.0
+description=Adds vertices to geometry along geodesic lines
+version=0.5
+author=Jonah Sullivan
+email=jonah.sullivan@ga.gov.au
+
+about=Add vertices to geometry along geodesic lines.
+
+tracker=https://github.com/GeoscienceAustralia/GeodesicDensifier/issues
+repository=http://repohttps://github.com/GeoscienceAustralia/GeodesicDensifier
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=feature, geometry, point, polyline, vector, geodesic, densify
+
+homepage=https://github.com/GeoscienceAustralia/GeodesicDensifier/issues
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
